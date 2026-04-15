@@ -494,16 +494,9 @@ function Game() {
   const playersLengthRef = useRef(0);
   const currentDrawerRef = useRef("");
 
-  const [userId] = useState(() => {
-  let id = localStorage.getItem("userId");
-
-  if (!id) {
-    id = "player_" + Math.floor(Math.random() * 100000);
-    localStorage.setItem("userId", id);
-  }
-
-  return id;
-});
+  const [userId] = useState(() =>
+  "player_" + Math.floor(Math.random() * 1000000)
+);
 
   const [players,         setPlayers]         = useState([]);
   const [currentDrawer,   setCurrentDrawer]   = useState("");
@@ -590,7 +583,9 @@ function Game() {
         stompClientRef.current = client;
 
         client.subscribe("/topic/players", (msg) => {
-          setPlayers(JSON.parse(msg.body));
+        const data = JSON.parse(msg.body);
+        console.log("PLAYERS FROM BACKEND:", data); 
+        setPlayers(data);
         });
 
         client.subscribe("/topic/turn", (msg) => {
@@ -697,8 +692,13 @@ function Game() {
           }
         });
 
-        client.publish({ destination: "/app/join",    body: userId });
-        setTimeout(() => client.publish({ destination: "/app/getTurn", body: "" }), 300);
+       setTimeout(() => {
+  client.publish({ destination: "/app/join", body: userId });
+}, 200);
+
+setTimeout(() => {
+  client.publish({ destination: "/app/getTurn", body: "" });
+}, 800);
       },
     });
 
@@ -821,10 +821,10 @@ function Game() {
           </p>
           {players.map((p, i) => (
             <div
-              key={i}
+              key={p}
               className={`player-row${p === currentDrawer ? " active" : ""} anim-fade-slide`}
               style={{ animationDelay: `${i * 0.05}s` }}
-            >
+              >
               {p === currentDrawer
                 ? <span style={{ fontSize: 14 }}>✏️</span>
                 : <div className="dot" />}
