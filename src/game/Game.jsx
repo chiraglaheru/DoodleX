@@ -828,7 +828,7 @@ setTimeout(() => {
               {p === currentDrawer
                 ? <span style={{ fontSize: 14 }}>✏️</span>
                 : <div className="dot" />}
-              <span style={{ fontSize: 14 }}>{p}</span>
+              <span style={{ fontSize: 14 }}>{p.split("_")[0]}</span>
               {scores[p] !== undefined && (
                 <span style={{
                   marginLeft: "auto", fontSize: 12, fontWeight: 700,
