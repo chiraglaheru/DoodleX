@@ -26,18 +26,25 @@ function Profile() {
   const [newComment, setNewComment] = useState("");
 
   const [isFollowing, setIsFollowing] = useState(false);
+  const currentUserId = Number(localStorage.getItem("userId"));
+
+  //lOGIN
+  useEffect(() => {
+  localStorage.setItem("userId", 16);
+  }, []);
 
   // LOAD PROFILE
   useEffect(() => {
-    getProfile(16).then((data) => setProfile(data));
-  }, []);
+  if (!currentUserId) return;
+  getProfile(currentUserId).then(setProfile);
+}, [currentUserId]);
 
   // CHECK FOLLOW STATUS
   useEffect(() => {
-    if (!profile) return;
+  if (!profile || !currentUserId) return;
 
-    checkFollow(profile.user.id, 16).then(setIsFollowing);
-  }, [profile]);
+  checkFollow(profile.user.id, currentUserId).then(setIsFollowing);
+}, [profile, currentUserId]);
 
   // LOAD LIKES
   useEffect(() => {
@@ -54,7 +61,7 @@ function Profile() {
   const handleLike = async (postId) => {
     try {
       if (likedPosts[postId]) {
-        await unlikePost(postId, 16);
+        await unlikePost(postId, currentUserId);
 
         setLikes((prev) => ({
           ...prev,
@@ -63,7 +70,7 @@ function Profile() {
 
         setLikedPosts((prev) => ({ ...prev, [postId]: false }));
       } else {
-        await likePost(postId, 16);
+        await likePost(postId, currentUserId);
 
         setLikes((prev) => ({
           ...prev,
@@ -110,10 +117,10 @@ function Profile() {
           <button
             onClick={async () => {
               if (isFollowing) {
-                await unfollow(userId, 16);
+                await unfollow(userId, currentUserId);
                 setIsFollowing(false);
               } else {
-                await follow(userId, 16);
+                await follow(userId, currentUserId);
                 setIsFollowing(true);
               }
             }}
@@ -194,7 +201,7 @@ function Profile() {
 
             <button
               onClick={async () => {
-                const newPost = await createPost(selectedFile, caption, 16);
+                const newPost = await createPost(selectedFile, caption, currentUserId);
 
                 setProfile({
                   ...profile,
@@ -254,7 +261,7 @@ function Profile() {
                   onClick={async () => {
                     if (!newComment.trim()) return;
 
-                    await addComment(selectedPost.id, 16, newComment);
+                    await addComment(selectedPost.id, currentUserId, newComment);
 
                     const updated = await getComments(selectedPost.id);
                     setComments(updated);

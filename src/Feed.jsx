@@ -12,13 +12,16 @@ function Feed() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [commentCount, setCommentCount] = useState({});
+  const currentUserId = Number(localStorage.getItem("userId"));
 
   // LOAD FEED
   useEffect(() => {
-    getFeed(16).then(data => {
-      setPosts(data || []);
-    });
-  }, []);
+  if (!currentUserId) return;
+
+  getFeed(currentUserId).then(data => {
+    setPosts(data || []);
+  });
+}, [currentUserId]);
 
   // LOAD LIKES
   useEffect(() => {
@@ -45,7 +48,7 @@ function Feed() {
   const handleLike = async (postId) => {
     try {
       if (likedPosts[postId]) {
-        await unlikePost(postId, 16);
+        await unlikePost(postId, currentUserId);
 
         setLikes(prev => ({
           ...prev,
@@ -54,7 +57,7 @@ function Feed() {
 
         setLikedPosts(prev => ({ ...prev, [postId]: false }));
       } else {
-        await likePost(postId, 16);
+        await likePost(postId, currentUserId);
 
         setLikes(prev => ({
           ...prev,
@@ -220,7 +223,7 @@ function Feed() {
                   onClick={async () => {
                     if (!newComment.trim()) return;
 
-                    await addComment(selectedPost.id, 16, newComment);
+                    await addComment(selectedPost.id, currentUserId, newComment);
 
                     const updated = await getComments(selectedPost.id);
                     setComments(updated);
