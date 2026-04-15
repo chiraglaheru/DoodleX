@@ -494,7 +494,16 @@ function Game() {
   const playersLengthRef = useRef(0);
   const currentDrawerRef = useRef("");
 
-  const [userId] = useState(() => localStorage.getItem("userId") || "Player");
+  const [userId] = useState(() => {
+  let id = localStorage.getItem("userId");
+
+  if (!id) {
+    id = "player_" + Math.floor(Math.random() * 100000);
+    localStorage.setItem("userId", id);
+  }
+
+  return id;
+});
 
   const [players,         setPlayers]         = useState([]);
   const [currentDrawer,   setCurrentDrawer]   = useState("");
