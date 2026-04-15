@@ -199,13 +199,18 @@ export default function Lobby({ onJoin }) {
     inputRef.current?.focus();
     return;
   }
-  localStorage.setItem("userId", trimmed);
+
+  const userId = trimmed + "_" + Date.now();
+
+  sessionStorage.setItem("userId", userId);
+  sessionStorage.setItem("name", trimmed);
+
   setRipple(true);
 
   setTimeout(() => {
     onJoin({
-    name: trimmed,
-    id: trimmed + "_" + Date.now(),
+      name: trimmed,
+      id: userId,
       color,
     });
   }, 380);
