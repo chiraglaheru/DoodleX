@@ -589,6 +589,12 @@ function Game() {
         setPlayers(data);
         });
 
+        client.subscribe(`/topic/turn/${userId}`, (msg) => {
+          const drawer = msg.body;
+          if (!drawer) return;
+          setCurrentDrawer(drawer);
+        });
+
         client.subscribe("/topic/turn", (msg) => {
           const drawer = msg.body;
           if (!drawer) return;
@@ -740,6 +746,10 @@ function Game() {
       destination: "/app/draw",
       body: JSON.stringify({ x, y, type: "draw", userId }),
     });
+    stompClientRef.current?.publish({
+    destination: "/app/updateActivity",
+    body: userId,
+  });
   };
 
   const stopDraw = () => setDrawing(false);
