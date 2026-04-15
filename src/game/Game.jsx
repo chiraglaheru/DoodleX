@@ -493,6 +493,7 @@ function Game() {
   const stompClientRef   = useRef(null);
   const playersLengthRef = useRef(0);
   const currentDrawerRef = useRef("");
+  const joinedRef         = useRef(false);
 
   const [userId] = useState(() =>
   sessionStorage.getItem("userId")
@@ -692,13 +693,19 @@ function Game() {
           }
         });
 
-       setTimeout(() => {
-  client.publish({ destination: "/app/join", body: userId });
-}, 200);
+      if (!joinedRef.current) {
+  joinedRef.current = true;
 
-setTimeout(() => {
-  client.publish({ destination: "/app/getTurn", body: "" });
-}, 800);
+  console.log("JOIN SENT:", userId);
+
+  setTimeout(() => {
+    client.publish({ destination: "/app/join", body: userId });
+  }, 200);
+
+  setTimeout(() => {
+    client.publish({ destination: "/app/getTurn", body: "" });
+  }, 800);
+}
       },
     });
 
