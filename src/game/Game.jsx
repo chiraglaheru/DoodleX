@@ -515,6 +515,7 @@ function Game() {
 
   // ── Score state: { username: number } ────────────────────────────────────
   const [scores, setScores] = useState({});
+  const isDrawer = userId === currentDrawer;
 
   // Keep refs in sync
   useEffect(() => { playersLengthRef.current = players.length; }, [players]);
@@ -766,8 +767,6 @@ function Game() {
     stompClientRef.current?.publish({ destination: "/app/chooseWord", body: w });
     setWordOptions([]);
   };
-
-  const isDrawer = userId === currentDrawer;
 
   return (
     <div style={{
