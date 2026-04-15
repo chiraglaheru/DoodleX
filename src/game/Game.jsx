@@ -573,7 +573,7 @@ function Game() {
 
   // SOCKET
   useEffect(() => {
-    const socket = new SockJS("https://doodlex-backend.onrender.com/chat");
+    const socket = new SockJS("https://doodlex-backend-590f.onrender.com/chat");
     const client = new Client({
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
