@@ -593,6 +593,10 @@ function Game() {
           const drawer = msg.body;
           if (!drawer) return;
           setCurrentDrawer(drawer);
+          if (drawer === userId) {
+    client.publish({ destination: "/app/getWords", body: "get" });
+    setSelectTime(10);
+      }
         });
 
         client.subscribe("/topic/turn", (msg) => {
