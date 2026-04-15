@@ -568,7 +568,7 @@ function Game() {
         return [...prev, pick];
       });
     }
-  }, [timeLeft, gameStarted, realWord]);
+  }, [timeLeft, gameStarted, realWord,isDrawer]);
 
   // SOCKET
   useEffect(() => {
