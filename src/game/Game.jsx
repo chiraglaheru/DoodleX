@@ -494,9 +494,16 @@ function Game() {
   const playersLengthRef = useRef(0);
   const currentDrawerRef = useRef("");
 
-  const [userId] = useState(() =>
-  "player_" + Math.floor(Math.random() * 1000000)
-);
+  const [userId] = useState(() => {
+  let name = sessionStorage.getItem("name");
+
+  if (!name) {
+    name = prompt("Enter your name:");
+    sessionStorage.setItem("name", name);
+  }
+
+  return name + "_" + Math.floor(Math.random() * 10000);
+}); 
 
   const [players,         setPlayers]         = useState([]);
   const [currentDrawer,   setCurrentDrawer]   = useState("");
