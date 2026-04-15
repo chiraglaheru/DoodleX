@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8081";
+const BASE_URL = "https://doodlex-backend.onrender.com";
 
 // FOLLOW
 export const checkFollow = async (userId, followerId) => {
@@ -7,14 +7,12 @@ export const checkFollow = async (userId, followerId) => {
   );
   return res.json();
 };
-
 export const follow = async (userId, followerId) => {
   await fetch(
     `${BASE_URL}/users/${userId}/follow?followerId=${followerId}`,
     { method: "POST" }
   );
 };
-
 export const unfollow = async (userId, followerId) => {
   await fetch(
     `${BASE_URL}/users/${userId}/unfollow?followerId=${followerId}`,
@@ -28,18 +26,15 @@ export const createPost = async (file, caption, userId) => {
   formData.append("file", file);
   formData.append("caption", caption);
   formData.append("userId", userId);
-
   const res = await fetch(`${BASE_URL}/posts`, {
     method: "POST",
     body: formData,
   });
-
   if (!res.ok) {
     const text = await res.text();
     console.error("Backend error:", text);
     throw new Error("Upload failed");
   }
-
   return res.json();
 };
 
@@ -57,7 +52,6 @@ export const likePost = async (postId, userId) => {
   );
   return res.text();
 };
-
 export const unlikePost = async (postId, userId) => {
   const res = await fetch(
     `${BASE_URL}/posts/${postId}/like?userId=${userId}`,
@@ -65,7 +59,6 @@ export const unlikePost = async (postId, userId) => {
   );
   return res.text();
 };
-
 export const getLikes = async (postId) => {
   const res = await fetch(`${BASE_URL}/posts/${postId}/likes`);
   return res.json();
@@ -82,60 +75,33 @@ export const getComments = async (postId) => {
   const res = await fetch(`${BASE_URL}/comments/${postId}`);
   return res.json();
 };
-
 export const addComment = async (postId, userId, text) => {
   const res = await fetch(`${BASE_URL}/comments`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      postId,
-      userId,
-      text,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ postId, userId, text }),
   });
-
   return res.json();
 };
 
-// LOGIN 
+// LOGIN
 export const loginUser = async (email, password) => {
   const res = await fetch(`${BASE_URL}/users/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
   });
-
-  if (!res.ok) {
-    throw new Error("Login Failed");
-  }
- 
+  if (!res.ok) throw new Error("Login Failed");
   return res.json();
 };
 
-//register
+// REGISTER
 export const registerUser = async (name, email, password) => {
-  const res = await fetch("http://localhost:8081/users", {
+  const res = await fetch(`${BASE_URL}/users`, { 
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name,
-      email,
-      password,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password }),
   });
-
-  if (!res.ok) {
-    throw new Error("Signup failed");
-  }
-
+  if (!res.ok) throw new Error("Signup failed");
   return res.json();
 };
